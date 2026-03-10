@@ -1,0 +1,35 @@
+select JSON sno,name,gender,drug,amt from patient;
+
+In Cassandra 2.2, the standard aggregate functions of min, max, avg, sum, and count are built-in functions.
+
+UDF
+
+CREATE FUNCTION summy(v1 int, v2 int) CALLED ON NULL INPUT RETURNS int LANGUAGE java AS'return ((v1 == null) ? 0 : v1) + ((v2 == null) ? 0 : v2); ';
+
+select summy(a,b) from table_name;
+
+UDAF
+
+CREATE TABLE keyvalue(key text primary key, value int );
+INSERT INTO keyvalue (key, value ) VALUES ( 'chris', 5);
+INSERT INTO keyvalue (1key, value ) VALUES ( 'luke', 10);
+INSERT INTO keyvalue (key, value ) VALUES ( 'patrick', 15);
+INSERT INTO keyvalue (key, value ) VALUES ( 'haddad', 20);
+						15				20
+CREATE FUNCTION maxI(current int, candidate int) CALLED ON NULL INPUT RETURNS int LANGUAGE java AS 'if (current == null) return candidate; else return Math.max(current, candidate);' ;
+
+CREATE AGGREGATE maxAgg(int) SFUNC maxI STYPE int INITCOND null;
+
+select maxagg(value)from keyvalue;
+
+
+The SFUNC clause should points to an UDF playing the role of accumulator function
+The STYPE clause indicates the type of the state to be passed to the SFUNC for accumulation
+INITCOND is the initial value of the state. It is optional. 
+
+
+
+
+
+select UDA(UDF) FROM table 
+select UDF(UDA) from tabel 
