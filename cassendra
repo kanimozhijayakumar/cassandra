@@ -1,0 +1,43 @@
+wget https://dlcdn.apache.org/cassandra/4.1.6/apache-cassandra-4.1.6-bin.tar.gz
+
+or
+
+ wget https://archive.apache.org/dist/cassandra/4.1.6/apache-cassandra-4.1.6-bin.tar.gz
+
+ tar -zxvf apache-cassandra-4.1.6-bin.tar.gz
+
+cd apache-cassandra-4.1.6
+bin/cassandra 
+
+-- Open new session 
+cd apache-cassandra-4.1.6
+bin/cqlsh
+
+Create keyspace  
+---------------
+CREATE KEYSPACE mobapp WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3}; 
+DESCRIBE KEYSPACE mobapp ; 
+use mobapp
+
+
+Create table (column family) 
+----------------------------
+CREATE TABLE appinfo (sno int,appName varchar , userName varchar  , gender varchar );
+
+
+UDT
+---
+CREATE TYPE mob_details (mobno int,mobname varchar,location text);
+
+CREATE TABLE mobinfo1 (sno int,appname text,mob_info frozen<mob_details> ,primary key(sno));
+
+insert INTO mobinfo1 (sno , appname ,mob_info ) VALUES ( 1,'fb',{mobno:90039,mobname:'moto',location:'chennai'});
+
+
+UDF
+--
+UDF
+
+CREATE FUNCTION summy(v1 int, v2 int) CALLED ON NULL INPUT RETURNS int LANGUAGE java AS'return ((v1 == null) ? 0 : v1) + ((v2 == null) ? 0 : v2); ';
+
+select summy(a,b) from table_name;
